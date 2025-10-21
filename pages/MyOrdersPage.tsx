@@ -56,7 +56,7 @@ const MyOrdersPage: React.FC = () => {
                                 </span>
                             </div>
                             <div>
-                                <h4 className="font-semibold text-slate-800 dark:text-white">من مطعم: {order.restaurantName}</h4>
+                                <h4 className="font-semibold text-slate-800 dark:text-white">من متجر: {order.vendorName}</h4>
                                 <ul className="list-disc list-inside text-sm text-slate-600 dark:text-slate-400 space-y-1 mt-2">
                                     {order.items.map((item, index) => (
                                         <li key={item.id || index}>

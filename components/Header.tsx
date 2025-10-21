@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
@@ -17,6 +17,19 @@ const Header: React.FC = () => {
   const { getCartItemCount } = useCart();
   const { theme, toggleTheme } = useTheme();
   const cartItemCount = getCartItemCount();
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-40 w-full shadow-md">
@@ -45,7 +58,7 @@ const Header: React.FC = () => {
               </NavLink>
             )}
             {user?.role === UserRole.RESTAURANT && (
-                <NavLink to="/restaurant-dashboard" className={({ isActive }) => `text-slate-600 dark:text-slate-300 hover:text-primary-500 transition-colors ${isActive ? 'text-primary-500 font-semibold' : ''}`}>
+                <NavLink to="/vendor-dashboard" className={({ isActive }) => `text-slate-600 dark:text-slate-300 hover:text-primary-500 transition-colors ${isActive ? 'text-primary-500 font-semibold' : ''}`}>
                     لوحة تحكم المطعم
                 </NavLink>
             )}
@@ -76,7 +89,7 @@ const Header: React.FC = () => {
               </Link>
             )}
             {user?.role === UserRole.RESTAURANT && (
-              <Link to="/restaurant-dashboard" className="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Restaurant Dashboard">
+              <Link to="/vendor-dashboard" className="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Restaurant Dashboard">
                 <DashboardIcon className="w-6 h-6" />
               </Link>
             )}
@@ -90,12 +103,18 @@ const Header: React.FC = () => {
               )}
             </Link>
             
-            <div className="relative group">
-               <Link to={user ? '#' : '/login'} className="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors block">
-                 <UserIcon className="w-6 h-6" />
-               </Link>
+            <div className="relative" ref={userMenuRef}>
+               {user ? (
+                 <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors block focus:outline-none">
+                   <UserIcon className="w-6 h-6" />
+                 </button>
+               ) : (
+                 <Link to={'/login'} className="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors block">
+                   <UserIcon className="w-6 h-6" />
+                 </Link>
+               )}
                {user && (
-                 <div className="absolute left-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200">
+                 <div className={`absolute left-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 transition-all duration-200 ${isUserMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                    <div className="px-4 py-2 text-sm text-slate-700 dark:text-slate-200 border-b dark:border-slate-700">
                      <p className="font-semibold">{user.name}</p>
                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user.email}</p>

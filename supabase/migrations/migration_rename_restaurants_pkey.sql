@@ -1,0 +1,1 @@
+ALTER TABLE vendors RENAME CONSTRAINT restaurants_pkey TO vendors_pkey;

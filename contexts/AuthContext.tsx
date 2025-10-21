@@ -45,7 +45,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const fetchUserProfile = async (supabaseUser: SupabaseUser) => {
     try {
       const { data: profile, error } = await supabase
-        .rpc('get_user_profile', { user_id: supabaseUser.id })
+        .from('profiles')
+        .select('*')
+        .eq('id', supabaseUser.id)
         .single();
 
       if (error && error.code !== 'PGRST116') { // PGRST116: PostgREST "No rows found"
@@ -61,7 +63,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           phone_number: profile.phone_number,
           district: profile.district,
           address_details: profile.address_details,
-          restaurantId: profile.restaurant_id,
+          vendorId: profile.vendor_id,
         });
       } else {
         // This is a fallback in case the trigger fails.

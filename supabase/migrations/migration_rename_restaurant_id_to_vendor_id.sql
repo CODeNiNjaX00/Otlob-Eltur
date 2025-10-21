@@ -1,0 +1,1 @@
+ALTER TABLE dishes RENAME COLUMN restaurant_id TO vendor_id;

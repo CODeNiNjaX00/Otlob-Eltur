@@ -2,29 +2,29 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
 import { Order } from '../types';
-import MenuManagement from '../components/MenuManagement';
+import VendorMenuManagement from '../components/VendorMenuManagement';
 import { Modal } from './AdminDashboard';
 
-const RestaurantDashboard: React.FC = () => {
+const VendorDashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'orders' | 'menu'>('orders');
     const { user } = useAuth();
-    const { dataState, updateOrderStatus, updateRestaurant } = useData();
+    const { dataState, updateOrderStatus, updateVendor } = useData();
 
-    const myRestaurant = dataState.restaurants.find(r => r.id === user?.restaurantId);
+    const myVendor = dataState.vendors.find(r => r.id === user?.vendorId);
     
-    if (!myRestaurant) {
+    if (!myVendor) {
         return (
             <div className="container mx-auto p-8 text-center">
-                <h1 className="text-2xl text-red-500">خطأ: لم يتم العثور على مطعم مرتبط بهذا الحساب.</h1>
+                <h1 className="text-2xl text-red-500">خطأ: لم يتم العثور على متجر مرتبط بهذا الحساب.</h1>
             </div>
         );
     }
     
-    const restaurantOrders = dataState.orders.filter(o => o.restaurantName === myRestaurant.name);
+    const vendorOrders = dataState.orders.filter(o => o.vendorName === myVendor.name);
     
     return (
         <div className="container mx-auto p-4 sm:p-6 lg:p-8">
-            <h1 className="text-3xl font-bold mb-2 text-slate-800 dark:text-white">لوحة تحكم مطعم {myRestaurant.name}</h1>
+            <h1 className="text-3xl font-bold mb-2 text-slate-800 dark:text-white">لوحة تحكم متجر {myVendor.name}</h1>
             <p className="text-slate-500 dark:text-slate-400 mb-6">مرحباً {user?.name}، يمكنك إدارة طلباتك وقائمة طعامك من هنا.</p>
             
              <div className="mb-8 border-b border-slate-200 dark:border-slate-700">
@@ -38,14 +38,14 @@ const RestaurantDashboard: React.FC = () => {
                 </nav>
             </div>
 
-            {activeTab === 'orders' && <RestaurantOrders orders={restaurantOrders} updateOrderStatus={updateOrderStatus} />}
-            {activeTab === 'menu' && <MenuManagement restaurant={myRestaurant} onUpdate={updateRestaurant} />}
+            {activeTab === 'orders' && <VendorOrders orders={vendorOrders} updateOrderStatus={updateOrderStatus} />}
+            {activeTab === 'menu' && <VendorMenuManagement vendor={myVendor} onUpdate={updateVendor} />}
         </div>
     );
 };
 
-// Orders Component for Restaurant Dashboard
-const RestaurantOrders: React.FC<{ orders: Order[], updateOrderStatus: (id: number, status: Order['status']) => void }> = ({ orders, updateOrderStatus }) => {
+// Orders Component for Vendor Dashboard
+const VendorOrders: React.FC<{ orders: Order[], updateOrderStatus: (id: number, status: Order['status']) => void }> = ({ orders, updateOrderStatus }) => {
     const newOrders = orders.filter(o => o.status === 'pending');
     const preparingOrders = orders.filter(o => o.status === 'in_progress');
     const [assignModalOrder, setAssignModalOrder] = useState<Order | null>(null);
@@ -58,10 +58,8 @@ const RestaurantOrders: React.FC<{ orders: Order[], updateOrderStatus: (id: numb
             </div>
             <ul className="list-disc list-inside text-sm text-slate-600 dark:text-slate-400 space-y-1 border-t dark:border-slate-700 pt-3 flex-grow">
                 {order.items.map((item, index) => (
-                    <li key={item.id || index}>
-                        {item.quantity} x {item.dish.name}
-                        {item.notes && <span className="block text-xs text-primary-600 dark:text-primary-500 ml-4">- {item.notes}</span>}
-                    </li>
+                    <li key={item.id || index}>                        {item.quantity} x {item.dish.name}
+                        {item.notes && <span className="block text-xs text-primary-600 dark:text-primary-500 ml-4">- {item.notes}</span>}                    </li>
                 ))}
             </ul>
              {order.status === 'pending' && (
@@ -148,4 +146,4 @@ const AssignDeliveryModal: React.FC<{ isOpen: boolean; onClose: () => void; orde
     );
 }
 
-export default RestaurantDashboard;
+export default VendorDashboard;

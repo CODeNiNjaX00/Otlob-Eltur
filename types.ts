@@ -10,11 +10,12 @@ export interface User {
   id: string; // Changed from number to string for Supabase UUID
   name: string;
   email: string;
+  password?: string;
   role: UserRole;
   phone_number?: string;
   district?: string;
   address_details?: string;
-  restaurantId?: number;
+  vendorId?: number;
 }
 
 export interface Dish {
@@ -25,14 +26,22 @@ export interface Dish {
   imageUrl: string;
 }
 
-export interface Restaurant {
+export interface Category {
   id: number;
   name: string;
+  image_url?: string;
+}
+
+export interface Vendor {
+  id: number;
+  name: string;
+  description: string;
   cuisine: string;
   rating: number;
   deliveryTime: number;
   imageUrl: string;
   menu: Dish[];
+  category_id: number;
 }
 
 export interface CartItem {
@@ -45,7 +54,7 @@ export interface CartItem {
 export interface Order {
   id: number;
   customerName: string;
-  restaurantName: string;
+  vendorName: string;
   deliveryAddress: string;
   totalPrice: number;
   status: 'pending' | 'in_progress' | 'out_for_delivery' | 'delivered' | 'cancelled';

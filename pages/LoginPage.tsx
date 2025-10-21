@@ -92,7 +92,7 @@ const LoginPage: React.FC = () => {
                 navigate('/delivery');
                 break;
             case UserRole.RESTAURANT:
-                navigate('/restaurant-dashboard');
+                navigate('/vendor-dashboard');
                 break;
             default:
                 navigate('/');

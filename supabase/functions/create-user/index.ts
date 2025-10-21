@@ -8,50 +8,29 @@ serve(async (req) => {
   }
 
   try {
-    const { email, password, name, role, address, restaurantId } = await req.json()
+    const { email, password, name, role, address, vendorId } = await req.json()
 
-    const supabaseAdmin = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    )
+    // Prepare the data for signUp, mapping vendorId to vendor_id
+    const signUpData = {
+      name,
+      role,
+      address,
+      ...(vendorId && { vendor_id: vendorId }),
+    };
 
-    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email: email,
-      password: password,
-      email_confirm: true, // Set to true to send a confirmation email.
-      user_metadata: {
-        full_name: name,
-        address: address,
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: signUpData,
       }
     })
 
-    if (authError) {
-      throw authError
+    if (error) {
+      throw error
     }
 
-    // The trigger will create the profile. Now we need to update the role and restaurantId if provided.
-    if (role || restaurantId) {
-        const { data: profileData, error: profileError } = await supabaseAdmin
-            .from('profiles')
-            .update({ 
-                role: role,
-                restaurant_id: restaurantId
-            })
-            .eq('id', authData.user.id)
-            .select()
-            .single();
-        
-        if (profileError) {
-            throw profileError;
-        }
-        return new Response(JSON.stringify(profileData), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 200,
-        });
-    }
-
-
-    return new Response(JSON.stringify(authData), {
+    return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     })

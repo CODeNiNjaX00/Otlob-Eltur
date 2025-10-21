@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, useEffect } from 'react';
-import { Restaurant, Dish } from '../types';
+import { Vendor, Dish } from '../types';
 import { useData } from '../contexts/DataContext';
 import { Modal, DishFormModal } from '../pages/AdminDashboard';
 
@@ -17,7 +17,7 @@ const ArrowRightIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
 );
 
-const MenuManagement: React.FC<{ restaurant: Restaurant, onBack?: () => void }> = ({ restaurant, onBack }) => {
+const VendorMenuManagement: React.FC<{ vendor: Vendor, onBack?: () => void }> = ({ vendor, onBack }) => {
     const [isDishModalOpen, setIsDishModalOpen] = useState(false);
     const [editingDish, setEditingDish] = useState<Dish | null>(null);
     const { addDish, updateDish, deleteDish } = useData();
@@ -30,7 +30,7 @@ const MenuManagement: React.FC<{ restaurant: Restaurant, onBack?: () => void }> 
             if (editingDish) {
                 await updateDish({ ...editingDish, ...dishData });
             } else {
-                await addDish(dishData, restaurant.id);
+                await addDish(dishData, vendor.id);
             }
             setIsDishModalOpen(false);
         } catch (error) {
@@ -59,7 +59,7 @@ const MenuManagement: React.FC<{ restaurant: Restaurant, onBack?: () => void }> 
                            العودة للمطاعم
                        </button>
                    )}
-                   <h2 className="text-xl font-bold text-slate-800 dark:text-white">إدارة منيو: {restaurant.name}</h2>
+                   <h2 className="text-xl font-bold text-slate-800 dark:text-white">إدارة منيو: {vendor.name}</h2>
                </div>
                <button onClick={openModalForNew} className="btn-primary-small flex items-center gap-2">
                    <PlusIcon className="w-5 h-5" />
@@ -70,7 +70,7 @@ const MenuManagement: React.FC<{ restaurant: Restaurant, onBack?: () => void }> 
                 <div className="hidden sm:grid grid-cols-4 gap-4 px-6 pb-2">
                     <div className="th-responsive col-span-2">الطبق</div><div className="th-responsive">السعر</div><div className="th-responsive text-left">الإجراءات</div>
                 </div>
-                {restaurant.menu.map(dish => (
+                {vendor.menu.map(dish => (
                     <div key={dish.id} className="grid grid-cols-3 sm:grid-cols-4 gap-4 items-start bg-white dark:bg-slate-800 sm:hover:bg-slate-50 dark:sm:hover:bg-slate-700/50 p-4 sm:px-6 rounded-lg shadow sm:shadow-none sm:rounded-none">
                         <div className="col-span-3 sm:col-span-2">
                             <h4 className="font-bold text-slate-800 dark:text-white">{dish.name}</h4>
@@ -89,4 +89,4 @@ const MenuManagement: React.FC<{ restaurant: Restaurant, onBack?: () => void }> 
     )
 }
 
-export default MenuManagement;
+export default VendorMenuManagement;

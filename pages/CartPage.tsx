@@ -30,7 +30,7 @@ const CartPage: React.FC = () => {
 
     const newOrderData = {
         customerName: user.name,
-        restaurantName: restaurant ? restaurant.name : 'مطعم غير معروف',
+        vendorName: restaurant ? restaurant.name : 'متجر غير معروف',
         deliveryAddress: user.address || 'لا يوجد عنوان',
         totalPrice: grandTotal,
         items: cartState.items,

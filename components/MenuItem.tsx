@@ -26,7 +26,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ dish }) => {
           <p className="text-md font-bold text-primary-600 dark:text-primary-500 mt-2">{dish.price} جنيه</p>
         </div>
         <div className="flex-shrink-0">
-          <img src={dish.imageUrl} alt={dish.name} className="w-24 h-24 rounded-lg object-cover" />
+          <img src={dish.imageUrl || 'https://via.placeholder.com/150'} alt={dish.name} className="w-24 h-24 rounded-lg object-cover" />
         </div>
       </div>
       

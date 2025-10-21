@@ -46,7 +46,7 @@ const DeliveryDashboard: React.FC = () => {
         <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
             <div className="flex justify-between items-center mb-4 pb-4 border-b dark:border-slate-700">
                 <h3 className="font-bold text-lg text-slate-800 dark:text-white">طلب رقم #{order.id}</h3>
-                 <span className="text-sm font-semibold text-slate-500 dark:text-slate-300">{order.restaurantName}</span>
+                 <span className="text-sm font-semibold text-slate-500 dark:text-slate-300">{order.vendorName}</span>
             </div>
             
             <p className="text-slate-700 dark:text-slate-300"><span className="font-semibold text-slate-500 dark:text-slate-400">العميل:</span> {order.customerName}</p>

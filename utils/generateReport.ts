@@ -21,7 +21,7 @@ export const printOrderReport = (orders: Order[], title: string) => {
         <tr class="border-b dark:border-slate-700">
             <td class="p-2">${order.id}</td>
             <td class="p-2">${order.customerName}</td>
-            <td class="p-2">${order.restaurantName}</td>
+            <td class="p-2">${order.vendorName}</td>
             <td class="p-2">${order.date}</td>
             <td class="p-2">${order.totalPrice.toFixed(2)} جنيه</td>
             <td class="p-2">${getStatusText(order.status)}</td>
